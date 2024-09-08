@@ -1,0 +1,690 @@
+#include<iostream.h>
+#include<conio.h>
+#include<fstream.h>
+#include<dos.h>
+#include<string.h>
+#include<stdio.h>
+int choice;
+int a,c;
+char ans;
+int foun=1;
+void password();
+void first_page();
+void main_menu();
+void book_menu();
+void student_menu();
+void function1();
+//---------------------------------FIRST PAGE()----------------------------
+void first_page()
+{
+ textbackground(RED);
+ textcolor(WHITE);
+ clrscr();
+ gotoxy(30,1);cout<<"CHANDIGARH UNIVERSITY";
+ gotoxy(26,2);cout<<"---------------------------";
+ gotoxy(31,3);cout<<"COMPUTER SCIENCE";
+ gotoxy(32,4);cout<<"PROJECT FILE";
+ gotoxy(31,5);cout<<"----------------";
+ gotoxy(27,7);cout<<"LIBRARY MANAGEMENT SYSTEM";
+ gotoxy(24,8);cout<<"----------------------------------";
+ gotoxy(27,9);cout<<"SUBMITTED: SWATI";
+  delay(2000);
+ textbackground(BLACK);
+ textcolor(WHITE);
+ clrscr();
+ password();
+}
+
+//--------------------------------PASSWORD()------------------------------
+void password()
+{
+  char pass[20]; int count=0;
+do{
+  gotoxy(32,10);cout<<"ENTER PASSWORD:"<<count+1<<".";
+  cin>>pass;
+  if(strcmp(pass,"swati")==0)
+   {
+     gotoxy(32,12);cout<<"Right password!!!";
+     gotoxy(22,14);cout<<".............WELCOME.............";
+     delay(1000);
+     main_menu();
+     count=3;
+   } else
+     {  	gotoxy(32,13);cout<<"           ";
+
+	gotoxy(32,12);cout<<"Worng password!!!";
+	++count;
+	gotoxy(48,10);cout<<"                  ";
+     }
+ }while(count<3);
+
+}
+
+//----------------------------------MAIN MENU()-------------------------
+void main_menu()
+{ textbackground(WHITE);
+  textcolor(BLACK);
+  clrscr();
+  choice=0;
+  gotoxy(32,1);cout<<"MAIN MENU";
+  gotoxy(32,2);cout<<"---------";
+  gotoxy(2,4);cout<<"1.BOOK CORNER";
+  gotoxy(2,5);cout<<"2.STUDENT CORNER";
+  gotoxy(2,6);cout<<"3.EXIT";
+  gotoxy(25,10);cout<<"Enter Ur choice(1,2,3):";
+  cin>>choice;
+
+  switch(choice)
+  {
+    case 1:book_menu();      break;
+    case 2:student_menu();   break;
+    case 3:                  break;
+    default:gotoxy(25,12);cout<<"U Entered wrong choice";
+	    gotoxy(30,13);cout<<"EXITING...!!!";
+  }
+}
+
+//--------------------------------CLASS BOOK------------------------------
+class book
+{
+   int  code;
+   char book_name[20];
+   char author_name[30];
+   int  quantity;
+
+ public:
+   void enter_book_details();
+   void show_book_details();
+   void search_book_details();
+   void modify_book_details();
+   void delete_book_details();
+   void heading();
+   void input();
+   void output();
+   int get_code()
+   {
+     return code;
+   }
+
+
+}b;
+//--------------------HEADING and INPUT() & OUTPUT()--------------------------
+void book::heading()
+{
+  gotoxy(1,5);cout<<"SR.NO.";
+  gotoxy(1,6);cout<<"------";
+  gotoxy(15,5);cout<<"CODE";
+  gotoxy(15,6);cout<<"----";
+  gotoxy(29,5);cout<<"BOOK NAME";
+  gotoxy(29,6);cout<<"---------";
+  gotoxy(49,5);cout<<"AUTHER NAME";
+  gotoxy(49,6);cout<<"-----------";
+  gotoxy(70,5);cout<<"QUANTITY";
+  gotoxy(70,6);cout<<"--------";
+}
+void book::input()
+{
+  gotoxy(1,6+a);cout<<c;
+  gotoxy(15,6+a);cin>>code;
+  gotoxy(29,6+a);cin>>book_name;
+  gotoxy(49,6+a);cin>>author_name;
+  gotoxy(70,6+a);cin>>quantity;
+}
+void book::output()
+{
+  gotoxy(1,6+a);cout<<c;
+  gotoxy(15,6+a);cout<<code;
+  gotoxy(29,6+a);cout<<book_name;
+  gotoxy(49,6+a);cout<<author_name;
+  gotoxy(70,6+a);cout<<quantity;
+}
+
+//----------------------------ENTER_BOOK_DETAILS()------------------------
+void book::enter_book_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  a=c=1;
+  gotoxy(30,1);cout<<"ENTERING BOOK DETAILS";
+  gotoxy(30,2);cout<<"---------------------";
+  ofstream fo("library.dat",ios::binary|ios::app);
+  b.heading();
+do
+{
+  b.input();
+  fo.write((char*)&b,sizeof(b));
+  gotoxy(20,19);cout<<"Do U want to Enter more details(y/n):";
+  cin>>ans;
+  ++a;++c;
+  gotoxy(58,19);cout<<"  ";
+}while(ans=='y');
+  fo.close();
+  function1();
+}
+
+//-----------------------------SHOW_BOOK_DETAILS()--------------------------
+void book::show_book_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  a=c=1;
+  gotoxy(30,1);cout<<"SHOWING BOOK DETAILS";
+  gotoxy(30,2);cout<<"--------------------";
+  ifstream fi("library.dat",ios::binary|ios::in|ios::app);
+  b.heading();
+  while(fi.read((char*)&b,sizeof(b)))
+  {
+
+     b.output();
+     ++a;++c;
+  }
+  fi.close();
+  function1();
+}
+
+//--------------------------------SEARCH_BOOK_DETAILS------------------
+void book::search_book_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int CODE;
+  a=c=1;foun=1;
+  fstream fi("library.dat",ios::binary|ios::in|ios::out);
+  gotoxy(30,1);cout<<"SEARCHING BOOK DETAILS";
+  gotoxy(30,2);cout<<"----------------------";
+  gotoxy(20,3);cout<<"Enter code of book to be searched for:";
+  cin>>CODE;
+  while( fi.read((char*)&b,sizeof(b)))
+  {
+
+    if(CODE==b.get_code())
+    {
+      b.heading();
+      b.output();
+      foun=2;
+    }
+  }
+     fi.close();
+     if(foun==1)
+     {gotoxy(26,10);cout<<"SORRY.....DETAILS NOT FOUND!!!"; }
+
+  function1();
+}
+
+//-------------------------------MODIFY_BOOK_DETAILS()-------------------
+void book::modify_book_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int CODE;
+  a=c=1;
+  char found;
+  fstream fifo("library.dat",ios::binary|ios::in|ios::out);
+  gotoxy(30,1);cout<<"MODIFYING BOOK DETAILS";
+  gotoxy(30,2);cout<<"----------------------";
+  gotoxy(20,3);cout<<"Enter code of book to be modified for:";
+  cin>>CODE;
+  fifo.seekg(0,ios::beg);
+  while(fifo.read((char*)&b,sizeof(b)))
+  {
+    long pos=fifo.tellg()-sizeof(b);
+
+    if(CODE==b.get_code())
+    {
+      gotoxy(5,4);cout<<"PREVIOUS DETAILS->";
+      b.heading();
+      b.output();
+      gotoxy(5,9);cout<<"NEW DETAILS->";
+      a=4;
+      c=1;
+      b.heading();
+      b.input();
+      fifo.seekp(pos,ios::beg);
+      fifo.write((char*)&b,sizeof(b));
+      gotoxy(32,13);cout<<"RECORD MODIFIED!!";
+      found='y';
+    }
+  }
+     fifo.close();
+     if(found=='n')
+     {
+       gotoxy(26,10);cout<<"SORRY.....CODE NOT FOUND!!!";
+     }
+
+  function1();
+}
+
+//------------------------------DELETE_BOOK_DETAILS()---------------------
+void book::delete_book_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int CODE;
+  a=c=1;
+  char found='n';
+  ifstream fi("library.dat",ios::binary|ios::in);
+  ofstream fo("temp.dat",ios::binary|ios::out);
+  gotoxy(30,1);cout<<"DELETING BOOK DETAILS";
+  gotoxy(30,2);cout<<"---------------------";
+  gotoxy(20,3);cout<<"Enter code of book to be deleted for:";
+  cin>>CODE;
+  while(fi.read((char*)&b,sizeof(b)))
+  {
+
+    if(CODE==get_code())
+    {
+      b.heading(); b.output();
+      found='y';
+      gotoxy(23,10);cout<<"Do u really want to delete this detail(y/n):";
+      cin>>ans;
+      if(ans!='y')
+      fo.write((char*)&b,sizeof(b));
+    }
+    else
+    fo.write((char*)&b,sizeof(b));
+  }
+
+    if(found=='n')
+    {
+	 gotoxy(30,12);cout<<"DETAILS NOT FOUND!!!!";
+	 function1();
+    }
+  if(found=='y')
+   {
+    fi.close();
+    fo.close();
+    remove("library.dat");
+    rename("temp.dat","library.dat");
+    gotoxy(30,12);cout<<"DETAILS DELETED!!!";
+    function1();
+   }
+}
+
+//---------------------------------BOOK MENU()------------------------
+void book_menu()
+{ textbackground(YELLOW);
+  textcolor(BLACK);
+  clrscr();
+  choice=0;
+  gotoxy(32,1);cout<<"BOOK MENU";
+  gotoxy(32,2);cout<<"---------";
+  gotoxy(2,4);cout<<"1.Enter book details";
+  gotoxy(2,6);cout<<"2.Show book details";
+  gotoxy(2,8);cout<<"3.Search book details";
+  gotoxy(2,10);cout<<"4.Modify book details";
+  gotoxy(2,12);cout<<"5.Delete book details";
+  gotoxy(2,14);cout<<"6.MAIN MENU";
+  gotoxy(2,15);cout<<"7.EXIT";
+  gotoxy(25,16);cout<<"Enter Ur choice:";
+  cin>>choice;
+
+  switch(choice)
+  {
+    case 1:b.enter_book_details();  break;
+    case 2:b.show_book_details();   break;
+    case 3:b.search_book_details(); break;
+    case 4:b.modify_book_details(); break;
+    case 5:b.delete_book_details(); break;
+    case 6:main_menu();  break;
+    case 7:              break;
+    default:gotoxy(25,17);cout<<"U Entered wrong choice";
+
+  }
+}
+
+//--------------------------------CLASS STUDENT--------------------------
+class student:public book
+{  long date,month,year;
+   long date2,month2,year2;
+   int  adm_no;
+   char student_name[20];
+   int book_code;
+   int  clas;
+
+ public:
+   void issue_book();
+   void show_student_details();
+   void search_student_details();
+   void modify_student_details();
+   void delete_student_details();
+  // void return_book();
+   void heading();
+   void input();
+   void output();
+   int get_adm_no()
+   {
+     return adm_no;
+   }
+
+}s;
+
+//--------------------HEADING and OUTPUT()--------------------------
+void student::heading()
+{
+  gotoxy(1,5);cout<<"D/M/Y";
+  gotoxy(1,6);cout<<"-----";
+  gotoxy(15,5);cout<<"Adm_NO.";
+  gotoxy(15,6);cout<<"-------";
+  gotoxy(29,5);cout<<"STUDENT NAME";
+  gotoxy(29,6);cout<<"------------";
+  gotoxy(49,5);cout<<"BOOK CODE";
+  gotoxy(49,6);cout<<"---------";
+  gotoxy(70,5);cout<<"CLASS";
+  gotoxy(70,6);cout<<"-----";
+}
+
+void student::output()
+{
+  gotoxy(1,6+a);cout<<date<<"."<<month<<"."<<year;
+  gotoxy(15,6+a);cout<<adm_no;
+  gotoxy(29,6+a);cout<<student_name;
+  gotoxy(49,6+a);cout<<book_code;
+  gotoxy(70,6+a);cout<<clas;
+}
+
+//-----------------------------ISSUING BOOK--------------------------------
+void student::input()
+{
+  gotoxy(1,6+a);cin>>date;
+  gotoxy(3,6+a);cout<<".";cin>>month;
+  gotoxy(6,6+a);cout<<".";cin>>year;
+  gotoxy(15,6+a);cin>>adm_no;
+  gotoxy(29,6+a);cin>>student_name;
+  gotoxy(49,6+a);cin>>book_code;
+  gotoxy(70,6+a);cin>>clas;
+  ifstream fi("library.dat",ios::binary|ios::in);
+  while(fi.read((char*)&b,sizeof(b)))
+  {
+   fi.read((char*)&b,sizeof(b));
+   if(book_code!=b.get_code())
+   {
+    gotoxy(30,15);cout<<"BOOK is not in Library ";
+    gotoxy(30,16);cout<<"   CANNOT  ISSUE!!!!!  ";
+    foun=0;;
+   }
+  if(foun==1)
+  gotoxy(30,15);cout<<"BOOK ISSUED";
+ }
+}
+
+//main function() for issue book------------------------
+void student::issue_book()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  a=1;
+  gotoxy(30,1);cout<<"ISSUE BOOK ";
+  gotoxy(30,2);cout<<"-----------";
+  ofstream fo("library.dat",ios::binary|ios::out);
+  s.heading();
+do
+{
+  s.input();
+  if(foun==1)
+  fo.write((char*)&s,sizeof(s));
+  gotoxy(20,19);cout<<"Do U want to issue more book(y/n):";
+  cin>>ans;
+  ++a;
+  gotoxy(30,15);cout<<"                       ";
+  gotoxy(30,16);cout<<"                       ";
+  gotoxy(30,15);cout<<"           ";
+  gotoxy(58,19);cout<<"  ";
+}while(ans=='y');
+  fo.close();
+  function1();
+}
+
+/*/--------------------------RETURNING BOOK()  ----------------------------
+void student::return_book_help()
+{
+  gotoxy(1,6+a);cin>>return_date;
+  gotoxy(3,6+a);cout<<".";cin>>month;
+  gotoxy(6,6+a);cout<<".";cin>>year;
+  gotoxy(15,6+a);cin>>adm_no;
+  gotoxy(29,6+a);cin>>student_name;
+  gotoxy(49,6+a);cin>>book_code;
+  gotoxy(70,6+a);cin>>clas;
+  ifstream fi("library.dat",ios::binary|ios::in);
+  while(fi)
+  {
+   fi.read((char*)&b,sizeof(b));
+   if(book_code!=b.get_code())
+   {
+
+//main function() to return book------------
+void student::return_book()
+{
+  textbackground(GREEN);textcolor(WHITE);clrscr();
+  int adm_n;       a=1;
+  ifstream fi("library.dat",ios::binary|ios::in);
+  ofstream fo("temp.dat",ios::binary|ios::out);
+  gotoxy(30,1);cout<<"RETURNING BOOK";
+  gotoxy(30,2);cout<<"--------------";
+  gotoxy(20,3);cout<<"Enter Adm_no. of student, whose book to return:";
+  cin>>adm_n;
+  while( fi.read((char*)&s,sizeof(s)))
+  {
+    if(adm_n==get_adm_no())
+    {
+      s.heading(); s.return_book();
+
+
+    }
+    else
+    fo.write((char*)&s,sizeof(s));
+  }
+   if(found=='n')
+    {
+	 gotoxy(30,12);cout<<"DETAILS NOT FOUND!!!!";
+	 function1();
+    }
+    fi.close();
+    fo.close();
+    remove("library.dat");
+    rename("tem.dat","library.dat");
+    if(found=='y')
+    {  gotoxy(30,12);cout<<"DETAILS DELETED!!!";
+       function1();
+    }
+} */
+//-----------------------------SHOW_STUDENT_DETAILS()--------------------------
+void student::show_student_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  a=1;
+  gotoxy(30,1);cout<<"SHOWING STUDENT DETAILS";
+  gotoxy(30,2);cout<<"-----------------------";
+  ifstream fi("library.dat",ios::binary|ios::in);
+  s.heading();
+  while(fi.read((char*)&s,sizeof(s)))
+  {
+
+     s.output();
+     ++a;
+  }
+  fi.close();
+  function1();
+}
+
+//--------------------------------SEARCH_STUDENT_DETAILS------------------
+void student::search_student_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int adm_n;
+  a=1;
+  fstream fi("library.dat",ios::binary|ios::in|ios::out);
+  gotoxy(30,1);cout<<"SEARCHING STUDENT DETAILS";
+  gotoxy(30,2);cout<<"-------------------------";
+  gotoxy(20,3);cout<<"Enter Adm_no. of book to be searched for:";
+  cin>>adm_n;
+  while( fi.read((char*)&s,sizeof(s)))
+  {
+
+    if(adm_n==s.get_adm_no())
+    {
+      s.heading();
+      s.output();
+    }
+     else
+     {
+       gotoxy(26,10);cout<<"SORRY.....DETAILS NOT FOUND!!!";
+     }
+  }
+  function1();
+}
+
+//-------------------------------MODIFY_STUDENT_DETAILS()-------------------
+void student::modify_student_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int adm_n;
+  a=1;
+  char found;
+  fstream fifo("library.dat",ios::binary|ios::in|ios::out);
+  gotoxy(30,1);cout<<"MODIFYING STUDENT DETAILS";
+  gotoxy(30,2);cout<<"-------------------------";
+  gotoxy(20,3);cout<<"Enter Adm.no of book to be modified for:";
+  cin>>adm_n;
+  while(fifo.read((char*)&s,sizeof(s)))
+  {
+    long pos=fifo.tellg();
+
+    if(adm_n==s.get_adm_no())
+    {
+      gotoxy(5,4);cout<<"PREVIOUS DETAILS->";
+      b.heading();
+      b.output();
+      gotoxy(5,9);cout<<"NEW DETAILS->";
+      a=4;
+      s.heading();
+      s.input();
+      fifo.seekg(pos);
+      fifo.write((char*)&s,sizeof(s));
+      gotoxy(32,13);cout<<"RECORD MODIFIED!!";
+      found='y';
+    }
+     else if(found=='n')
+     {
+       gotoxy(26,10);cout<<"SORRY.....CODE NOT FOUND!!!";
+     }
+  }
+  function1();
+}
+
+//------------------------------DELETE_STUDENT_DETAILS()---------------------
+void student::delete_student_details()
+{
+  textbackground(GREEN);
+  textcolor(WHITE);
+  clrscr();
+  int adm_n;
+  a=1;
+  char found='n';
+  ifstream fi("library.dat",ios::binary|ios::in);
+  ofstream fo("tem.dat",ios::binary|ios::out);
+  gotoxy(30,1);cout<<"DELETING STUDENT DETAILS";
+  gotoxy(30,2);cout<<"------------------------";
+  gotoxy(20,3);cout<<"Enter Adm_no. of book to be deleted for:";
+  cin>>adm_n;
+  while(fi.read((char*)&s,sizeof(s)))
+  {
+    fi.read((char*)&s,sizeof(s));
+    if(adm_n==get_adm_no())
+    {
+      s.heading(); s.output();found='y';
+      gotoxy(23,10);cout<<"Do u really want to delete this detail(y/n):";
+      cin>>ans;
+      if(ans!='y')
+      fo.write((char*)&s,sizeof(s));
+    }
+    else
+    fo.write((char*)&s,sizeof(s));
+  }
+   if(found=='n')
+    {
+	 gotoxy(30,12);cout<<"DETAILS NOT FOUND!!!!";
+	 function1();
+    }
+    fi.close();
+    fo.close();
+    remove("library.dat");
+    rename("tem.dat","library.dat");
+    if(found=='y')
+    {  gotoxy(30,12);cout<<"DETAILS DELETED!!!";
+       function1();
+    }
+}
+
+
+//------------------------------STUDENT MENU------------------------------
+void student_menu()
+{ textbackground(YELLOW);
+  textcolor(BLACK);
+  clrscr();
+  choice=0;
+  gotoxy(32,1);cout<<"STUDENT MENU";
+  gotoxy(32,2);cout<<"------------";
+  gotoxy(2,4);cout<<"1.Issue book";
+  gotoxy(2,6);cout<<"2.Show Student details";
+  gotoxy(2,8);cout<<"3.Search Student details";
+  gotoxy(2,10);cout<<"4.Modify Student details";
+  gotoxy(2,12);cout<<"5.Delete Student details";
+  gotoxy(2,14);cout<<"6.Return book";
+  gotoxy(2,16);cout<<"7.MAIN MENU";
+  gotoxy(2,18);cout<<"8.EXIT";
+  gotoxy(25,20);cout<<"Enter Ur choice:";
+  cin>>choice;
+
+  switch(choice)
+  {
+    case 1:s.issue_book();  break;
+    case 2:s.show_student_details();   break;
+    case 3:s.search_student_details(); break;
+    case 4:s.modify_student_details(); break;
+    case 5:s.delete_student_details(); break;
+//    case 6:s.return_book(); break;
+    case 7:main_menu();	      break;
+    case 8:                   break;
+    default:gotoxy(25,21);cout<<"U Entered wrong choice";
+
+  }
+}
+
+//helping FUNCTION-1----------------------------------------------
+void function1()
+{
+  gotoxy(30,21);cout<<"Enter ur choice:";
+  gotoxy(18,22);cout<<"a.MAIN MENU";
+  gotoxy(37,22);cout<<"b.BOOK MENU";
+  gotoxy(57,22);cout<<"c.STUDENT MENU";
+  gotoxy(46,21);cin>>ans;
+  switch(ans)
+  {
+    case 'a':main_menu();     break;
+    case 'b':book_menu();     break;
+    case 'c':student_menu();  break;
+    default:gotoxy(28,24);cout<<"U Entered wrong choice";
+	    gotoxy(32,25);cout<<"EXITING...!!!";
+  }
+}
+
+//----------------------------------VOID MAIN()-------------------------
+void main()
+{
+  clrscr();
+  first_page();
+  getch();
+}
+
