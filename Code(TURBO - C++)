@@ -27,7 +27,7 @@ void first_page()
  gotoxy(31,5);cout<<"----------------";
  gotoxy(27,7);cout<<"LIBRARY MANAGEMENT SYSTEM";
  gotoxy(24,8);cout<<"----------------------------------";
- gotoxy(27,9);cout<<"SUBMITTED: SWATI";
+ gotoxy(27,9);cout<<"SUBMITTED: Prince";
   delay(2000);
  textbackground(BLACK);
  textcolor(WHITE);
